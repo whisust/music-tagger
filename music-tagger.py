@@ -16,10 +16,15 @@ def build_tag(directories):
 
 def tag_song(filename: str, directories: List[str]):
     genre_tag = build_tag(directories)
-    f = music_tag.load_file(filename)
-    f.remove_tag('genre')
-    f.append_tag('genre', genre_tag)
-    f.save()
+    print(f'Tagging {filename} with genre:{genre_tag}')
+    try:
+        f = music_tag.load_file(filename)
+        f.remove_tag('genre')
+        f.append_tag('genre', genre_tag)
+        f.save()
+    except Exception as e:
+        print(f'Failed to process {filename} because of {e}, skipping file')
+
 
 
 def process_file(base_filename: str):
@@ -31,7 +36,6 @@ def process_file(base_filename: str):
 
         if set(dirs).isdisjoint(excluded_directories) and len(dirs) > 1:
             dirs = dirs[1:]
-            print('Tagging ', base_filename)
             tag_song(base_filename, dirs)
 
 
